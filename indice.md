@@ -6,9 +6,10 @@ Juego tipo runner con solo un jugador donde tienes que llegar a la meta saltando
 # Mejoras
 
 - que haya una pantalla principal done tienes varios jugadores para escoger
-    - jugador azul que su poder sea relentizar un 2,5% a los demás
+    - jugador amarillo que su poder sea relentizar un 2,5% a los demás
     - jugador rojo que su poder sea correr un 2,5% más durante 5 segundos
     - jugador verde que su poder saltar un 2,5% más largo
+    - jugador azul que su poder es reduce el 2,5% de la disminución de los impactos contra obstaculos
 - tener objetos en la mitad de la carrera que te relentizan o te hacer coger velocidad
 - Si chocas 3 veces te lesionas y ya no puedes avanzar (game over)
 - Poner rivales que corren con la velocidad de forma aleatoria y siempre salten bien (los rivales son los otros jugadores creados pero sus poderes están rebajados un 1,5%)

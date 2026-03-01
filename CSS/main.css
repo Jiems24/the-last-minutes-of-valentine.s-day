@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+}
+
+.gamebackground {
+    width: 800vw;
+    height: 250vw;
+    border: 2vw solid white;
+    position: relative;
+}
+
+
+.player {
+    width: 25vw;
+    height: 25vw;
+    color: red;
+    position: absolute;
+
+}
