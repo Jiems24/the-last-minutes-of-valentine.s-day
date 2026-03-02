@@ -3,17 +3,33 @@ body {
 }
 
 .gamebackground {
-    width: 800vw;
-    height: 250vw;
-    border: 2vw solid white;
+    width: 800px;
+    height: 250px;
+    border: 2px solid white; /* Cambiar el color */
     position: relative;
 }
 
+.track{
+position: relative;
+height: 50%;
+display: flex;
+flex-direction: column;
+background-color: maroon;
+margin: 10px;
+}
+
+.lane{
+margin: 3px;
+height: 15.5%;
+position: relative;
+}
 
 .player {
-    width: 25vw;
-    height: 25vw;
-    color: red;
+    width: 25px;
+    height: 25px;
+    background-color: red;
     position: absolute;
-
+    left: 20px;
+    bottom: 0px;
+    
 }
