@@ -72,9 +72,9 @@ document.addEventListener("keyup", (e) => {
     }
 });
 
-const obstaclesArr = []
+/*const obstaclesArr = []
 
-/*setInterval(() => {
+setInterval(() => {
     obstaclesArr.forEach(() => {
         // move this obstacle
 
