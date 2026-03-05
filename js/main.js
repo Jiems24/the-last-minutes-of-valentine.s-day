@@ -1,4 +1,4 @@
-
+// Clase del jugador
 class Player {
     constructor() {
         this.positionX = 80
@@ -8,11 +8,14 @@ class Player {
     }
 }
 
+// Instancia del jugador
 const playerRed = new Player()
 
+//Elementos del DOM: Jugador y carretera
 const playerElement = document.querySelector(".player");
 const road = document.querySelector(".road");
 
+//Configuración de carriles (4 carriles y carril actual)
 const trackCount = 4;
 let trackIndex = 1;
 
@@ -49,7 +52,7 @@ function changeTrack(event) {
 
 const cars = [];
 const carTravelTime = 5000;
-const maxCars = 1
+const maxCars = 3
 let spawnIntervalId = null;
 let gameLoopId = null;
 let isGameOver = false;

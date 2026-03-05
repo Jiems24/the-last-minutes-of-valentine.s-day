@@ -13,24 +13,28 @@ h1 {
   margin: 0;
   padding: 10px;
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  color: white;
+  top: 10px;
+  left: 50%;
+  z-index: 50;
+  color: black;
+  background-color: #577ab7;
+  transform: translateX(-50%);
+  border: 5px solid goldenrod;
+  border-radius: 12px;
 }
 
 .gamebackground {
   width: 100vw;
-  height: 100vh;
+  height: 98vh;
   position: relative;
   overflow: hidden;
 
-  background-image: url("../Img/background.png");
+  background-image: url("../Img/background_1389x487.png");
   background-repeat: no-repeat;
 
   background-size: contain;
-  background-position: center;
-  background-color: rgba(21, 20, 20, 0.849);
+  background-position: bottom;
+  background-color: #577ab7;
 
 
 }
@@ -42,11 +46,14 @@ h1 {
   bottom: 0;
   height: 45%;
   overflow: hidden;
+
+  width: 100vw;
+  
 }
 
 .player {
   position: absolute;
-  left: 60px;
+  left: 10%;
   top: 0;
   width: 5vw;
   height: 10vh;
