@@ -18,6 +18,10 @@ const road = document.querySelector(".road");
 const board = document.querySelector(".gamebackground");
 const title = document.querySelector("h1");
 
+// Seleccionar pantalla Game Over
+const gameOverScreen = document.querySelector(".gameOverScreen");
+const restartBtn = document.querySelector("#restartBtn");
+
 //Configuración de carriles (4 carriles y carril actual)
 const trackCount = 4;
 let trackIndex = 1;
@@ -196,31 +200,60 @@ function checkCollision() {
     }
 }
 
+function startLoops() {
+    clearInterval(spawnIntervalId);
+    clearInterval(gameLoopId);
+
+    spawnIntervalId = setInterval(() => {
+        spawnCar();
+        if (Math.random() < 0.3) {
+            spawnCar();
+        }
+    }, 1200);
+
+    gameLoopId = setInterval(() => {
+        const now = Date.now();
+
+        for (let i = 0; i < cars.length; i++) {
+            cars[i].update(now);
+        }
+        for (let i = cars.length - 1; i >= 0; i--) {
+            if (cars[i].removed) cars.splice(i, 1);
+        }
+        // Comprobar colisión jugador vs coches
+        checkCollision();
+    }, 16);
+}
+
+
 // Para el juego y muestra cartel "GAME OVER"
 function gameOver() {
     isGameOver = true;
     clearInterval(spawnIntervalId);
     clearInterval(gameLoopId);
 
-    const over = document.createElement("div")
-    over.textContent = "GAME OVER";
-    over.style.position = "absolute";
-    over.style.top = "0px";
-    over.style.left = "0px";
-    over.style.transform = none;
-    over.style.padding = "20px 30px";
-    over.style.background = "rgba(0,0,0,0.8)";
-    over.style.color = "white";
-    over.style.fontSize = "48px";
-    over.style.fontFamily = "Arial";
-    over.style.zIndex = "9999";
+    if (gameOverScreen) gameOverScreen.style.display = "flex";
+}
 
-    document.body.appendChild(over);
+function restartGame() {
 
-    const centerX = Math.floor((window.innerWidth - over.offsetWidth) / 2);
-    const centerY = Math.floor((window.innerHeight - over.offsetHeight) / 2);
-    over.style.left = centerX + "px";
-    over.style.top = centerY + "px";
+    if (gameOverScreen) gameOverScreen.style.display = "none";
+
+    clearInterval(spawnIntervalId);
+    clearInterval(gameLoopId);
+
+    isGameOver = false;
+
+    for (let i = 0; i < cars.length; i++) {
+        cars[i].remove();
+    }
+    cars.length = 0;
+
+    trackIndex = 1;
+    playerSecondTrack();
+
+    startLoops();
+
 }
 
 
@@ -239,29 +272,13 @@ document.addEventListener("DOMContentLoaded", () => {
         playerSecondTrack();
     });
 
-     window.addEventListener("resize", () => {
+    window.addEventListener("resize", () => {
         setGameSizes();
         playerSecondTrack();
-    }); 
+    });
 
     roadSize.observe(road);
-    spawnIntervalId = setInterval(() => {
-        spawnCar();
 
-        if (Math.random() < 0.3) {
-            spawnCar();
-        }
-    }, 1200);
-    gameLoopId = setInterval(() => {
-        const now = Date.now();
-
-        for (let i = 0; i < cars.length; i++) {
-            cars[i].update(now);
-        }
-        for (let i = cars.length - 1; i >= 0; i--) {
-            if (cars[i].removed) cars.splice(i, 1);
-        }
-        // Comprobar colisión jugador vs coches
-        checkCollision();
-    }, 16);
+    restartBtn.addEventListener("click", restartGame);
+    startLoops();
 });
