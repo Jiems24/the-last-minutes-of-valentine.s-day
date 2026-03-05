@@ -15,16 +15,46 @@ const playerRed = new Player()
 const playerElement = document.querySelector(".player");
 const road = document.querySelector(".road");
 
+const board = document.querySelector(".gamebackground");
+const title = document.querySelector("h1");
+
 //Configuración de carriles (4 carriles y carril actual)
 const trackCount = 4;
 let trackIndex = 1;
 
+function setGameSizes() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    document.body.style.height = screenHeight + "px";
+
+    board.style.width = screenWidth + "px";
+    board.style.height = Math.floor(screenHeight * 0.98) + "px";
+
+    road.style.width = screenWidth + "px";
+    road.style.height = Math.floor(screenHeight * 0.45) + "px";
+
+    const playerWidth = Math.floor(screenWidth * 0.05);
+    const playerHeight = Math.floor(screenHeight * 0.10);
+    playerElement.style.width = playerWidth + "px";
+    playerElement.style.height = playerHeight + "px";
+
+    playerRed.positionX = Math.floor(screenWidth * 0.10);
+    playerElement.style.left = playerRed.positionX + "px";
+
+    setTimeout(() => {
+        title.style.left = Math.floor((screenWidth - title.offsetWidth) / 2) + "px";
+    }, 0);
+}
+
+// Calcula el "top" (altura) para colocar un elemento centrado en un carril
 function getLaneTop(laneIndex, elementHeight) {
     const roadHeight = road.clientHeight;
     const trackHeight = roadHeight / trackCount;
     return laneIndex * trackHeight + (trackHeight - elementHeight) / 2;
 }
 
+// Coloca al jugador en el carril actual (trackIndex)
 function playerSecondTrack() {
     const top = getLaneTop(trackIndex, playerElement.clientHeight);
 
@@ -33,7 +63,7 @@ function playerSecondTrack() {
 
     playerRed.positionY = top;
 }
-
+// Cambio de carril con flechas (arriba/abajo)
 function changeTrack(event) {
     if (event.code === "ArrowUp") {
         if (trackIndex > 0) {
@@ -51,42 +81,53 @@ function changeTrack(event) {
 }
 
 const cars = [];
-const carTravelTime = 5000;
-const maxCars = 3
+const carTravelTime = 4000;
+const maxCars = 5
 let spawnIntervalId = null;
 let gameLoopId = null;
 let isGameOver = false;
 
+// Clase del coche/obstáculo
 class Car {
     constructor(laneIndex) {
+        // Carril del coche
         this.laneIndex = laneIndex;
+
+        // Crear elemento IMG del coche
         this.element = document.createElement("img");
         this.element.classList.add("car");
         this.element.src = "./Img/car.gif";
         this.element.alt = "car";
 
+        // Estilos básicos del coche
         this.element.style.position = "absolute";
-        this.element.style.width = "10vw"
+        this.element.style.width = Math.floor(window.innerWidth * 0.10) + "px"
         this.element.style.height = "auto";
 
+        // Añadir coche dentro de la carretera
         road.appendChild(this.element);
 
+        // Colocar el coche en el carril 
         const carHeight = this.element.clientHeight || 60;
         const top = getLaneTop(this.laneIndex, carHeight);
         this.element.style.top = top + "px"
 
+        // Punto inicial (derecha) y final (izquierda)
         this.startX = road.clientWidth + 20;
         this.width = this.element.clientWidth || 90;
         this.endX = -this.width - 20;
 
+        // Posición inicial X
         this.element.style.left = this.startX + "px";
 
+        // Tiempo de inicio del movimiento
         this.startTime = Date.now();
 
+        // Flag para saber si ya se eliminó
         this.removed = false;
     }
 
-
+    // Actualiza posición del coche en función del tiempo
     update(now) {
         if (this.removed) {
 
@@ -97,12 +138,14 @@ class Car {
             const currentX = this.startX + (this.endX - this.startX) * progress;
             this.element.style.left = currentX + "px";
 
+            // Si llegó al final, eliminarlo
             if (progress >= 1) {
                 this.remove();
             }
         }
     }
 
+    // Elimina el coche del DOM y marca removed
     remove() {
         if (this.removed) {
 
@@ -113,10 +156,12 @@ class Car {
     }
 }
 
+// Devuelve un carril aleatorio
 function getRandomTrackIndex() {
     return Math.floor(Math.random() * trackCount);
 }
 
+// Crea un coche nuevo si no hay game over y no se supera el máximo
 function spawnCar() {
     if (isGameOver) return;
     if (cars.length >= maxCars) return;
@@ -125,6 +170,7 @@ function spawnCar() {
     cars.push(newCar);
 }
 
+// Comprueba colisión
 function isColliding(playerBox, carBox) {
     return (
         playerBox.left < carBox.right &&
@@ -150,6 +196,7 @@ function checkCollision() {
     }
 }
 
+// Para el juego y muestra cartel "GAME OVER"
 function gameOver() {
     isGameOver = true;
     clearInterval(spawnIntervalId);
@@ -158,9 +205,9 @@ function gameOver() {
     const over = document.createElement("div")
     over.textContent = "GAME OVER";
     over.style.position = "absolute";
-    over.style.top = "50%";
-    over.style.left = "50%";
-    over.style.transform = "translate(-50%, -50%)";
+    over.style.top = "0px";
+    over.style.left = "0px";
+    over.style.transform = none;
     over.style.padding = "20px 30px";
     over.style.background = "rgba(0,0,0,0.8)";
     over.style.color = "white";
@@ -169,12 +216,19 @@ function gameOver() {
     over.style.zIndex = "9999";
 
     document.body.appendChild(over);
+
+    const centerX = Math.floor((window.innerWidth - over.offsetWidth) / 2);
+    const centerY = Math.floor((window.innerHeight - over.offsetHeight) / 2);
+    over.style.left = centerX + "px";
+    over.style.top = centerY + "px";
 }
 
 
 
-
+// Espera a que el HTML esté cargado antes de iniciar el juego
 document.addEventListener("DOMContentLoaded", () => {
+
+    setGameSizes();
 
     playerElement.addEventListener("load", playerSecondTrack);
 
@@ -184,6 +238,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const roadSize = new ResizeObserver(() => {
         playerSecondTrack();
     });
+
+     window.addEventListener("resize", () => {
+        setGameSizes();
+        playerSecondTrack();
+    }); 
+
     roadSize.observe(road);
     spawnIntervalId = setInterval(() => {
         spawnCar();
@@ -201,8 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let i = cars.length - 1; i >= 0; i--) {
             if (cars[i].removed) cars.splice(i, 1);
         }
-            checkCollision();
-        }, 16);
-
-
+        // Comprobar colisión jugador vs coches
+        checkCollision();
+    }, 16);
 });
